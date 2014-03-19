@@ -108,7 +108,10 @@ $app->get('/search/',function () use($app){
 
 		$tmp->thumbnail = $tmp->media_thumbnails[0];
 
-		$tmp_item[] = $tmp;
+		if(!empty($tmp->thumbnail)){
+			$tmp_item[] = $tmp;
+		}
+		
 	}
 
 	$art['items'] = $tmp_item;
