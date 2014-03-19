@@ -65,9 +65,7 @@ $app->get('/search/',function () use($app){
 		$query .= ' sort:'.$sort;
 	}
 
-	// if($offset){
-	// 	$query .= 'offset:'.$offset;
-	// }
+
 
 	$query = trim($query);
 	$query = urlencode($query);
@@ -75,9 +73,8 @@ $app->get('/search/',function () use($app){
 	//$query ='sort:time meta:all boost:popular max_age:48h';
 	//$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
 	
-	$url   = 'http://backend.deviantart.com/rss.xml?q=';
+	$url   = "http://backend.deviantart.com/rss.xml?offset=$offset&q=";
 	$url   = $url.$query;
-	//var_dump($url);
 	// Parse it
 	$feed = new SimplePie();
 	$feed->set_feed_url($url);
@@ -92,6 +89,15 @@ $app->get('/search/',function () use($app){
 	$art['link_next'] = $feed->get_links('next');
 	$art['title']	= $feed->get_title();
 	$art['link']	= $feed->get_link();
+
+	if(!empty($art['link_next'])){
+		$url = parse_url($art['link_next'][0]);
+		$query = parse_str($url['query'],$args);
+		$art['offset'] = $args['amp;offset'];
+	}else{
+		$art['offset'] = "0";
+	}
+
 
 	foreach ($items as $item)
 	{
@@ -113,13 +119,13 @@ $app->get('/search/',function () use($app){
 		}
 		
 	}
-
-	$art['items'] = $tmp_item;
-	
-	//var_dump($art);
+	if(!empty($tmp_item)){
+		$art['items'] = $tmp_item;
+	}else{
+		$art['error'] = 'no_data';
+	}
 
 	return $app->json($art, 201);
-
 });
 
 
