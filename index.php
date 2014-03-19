@@ -8,49 +8,90 @@ $app['debug'] = true;
 //libs
 $app->curl = new Curl;
 
-$app->get('/hello/{name}', function ($name) use ($app) {
-  return 'Hello '.$app->escape($name);
+
+$app->get('/',function (){
+	return '';
 });
 
-$app->get('/popular',function () use ($app){
+// $app->get('/popular',function () use ($app){
 	
-	$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
+// 	$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
 
 
-	$response = $app->curl->get($url);
-	$xml = simplexml_load_string($response);
-	$namespaces = $xml->getNamespaces(true); // get namespaces
+// 	$response = $app->curl->get($url);
+// 	$xml = simplexml_load_string($response);
+// 	$namespaces = $xml->getNamespaces(true); // get namespaces
 
-	// iterate items and store in an array of objects
-	$items = array();
-	foreach ($xml->channel->item as $item) {
+// 	// iterate items and store in an array of objects
+// 	$items = array();
+// 	foreach ($xml->channel->item as $item) {
 
-	  $tmp = new stdClass(); 
-	  $tmp->title = trim((string) $item->title);
-	  $tmp->link  = trim((string) $item->link);
-	  // etc... 
-	  // now for the url in media:content
-	  //
-	  $tmp->rating = trim((string)$item->children($namespaces['media'])->content->attributes()->rating);
+// 	  $tmp = new stdClass(); 
+// 	  $tmp->title = trim((string) $item->title);
+// 	  $tmp->link  = trim((string) $item->link);
+// 	  // etc... 
+// 	  // now for the url in media:content
+// 	  //
+// 	  $tmp->rating = trim((string)$item->children($namespaces['media'])->content->attributes()->rating);
 
-	  // add parsed data to the array
-	  $items[] = $tmp;
+// 	  // add parsed data to the array
+// 	  $items[] = $tmp;
+// 	}
+// 	var_dump($items);
+// });
+
+
+$app->get('/search/',function () use($app){
+
+	$boost = $app['request']->get('b');
+	$range = $app['request']->get('r');
+	$cat = $app['request']->get('c');
+	$sort = $app['request']->get('s');
+	$offset = $app['request']->get('o');
+
+	if($boost){
+		$query = 'boost:'.$boost;
 	}
-	var_dump($items);
-});
 
+	if($range){
+		$query .= ' max_age:'.$range;
+	}
 
-$app->get('/p',function () use($app){
+	if($cat){
+		$query .=' in:'.$cat;
+	}
 
-	$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
+	if($sort){
+		$query .= ' sort:'.$sort;
+	}
+
+	// if($offset){
+	// 	$query .= 'offset:'.$offset;
+	// }
+
+	$query = trim($query);
+	$query = urlencode($query);
+
+	//$query ='sort:time meta:all boost:popular max_age:48h';
+	//$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
+	
+	$url   = 'http://backend.deviantart.com/rss.xml?q=';
+	$url   = $url.$query;
+	//var_dump($url);
 	// Parse it
 	$feed = new SimplePie();
 	$feed->set_feed_url($url);
-	$feed->enable_cache(false);
+	$feed->set_cache_location(__DIR__.'/storage/cache');
+	$feed->enable_cache(true);
 	$feed->enable_order_by_date(false);
 	$feed->init();
 
 	$items = $feed->get_items();
+
+
+	$art['link_next'] = $feed->get_links('next');
+	$art['title']	= $feed->get_title();
+	$art['link']	= $feed->get_link();
 
 	foreach ($items as $item)
 	{
@@ -65,12 +106,16 @@ $app->get('/p',function () use($app){
 			$tmp->media_thumbnails = $enclosure->get_thumbnails();
 		}
 
-		$art[] = $tmp;
+		$tmp->thumbnail = $tmp->media_thumbnails[0];
+
+		$tmp_item[] = $tmp;
 	}
 
-	var_dump($art);
+	$art['items'] = $tmp_item;
+	
+	//var_dump($art);
 
-	return '';
+	return $app->json($art, 201);
 
 });
 
