@@ -113,7 +113,7 @@ $app->get('/search/',function () use($app){
 			$tmp->media_thumbnails = $enclosure->get_thumbnails();
 		}
 
-		$tmp->thumbnail = $tmp->media_thumbnails[0];
+		$tmp->thumbnail = $tmp->media_thumbnails[1];
 
 		if(!empty($tmp->thumbnail)){
 			$tmp_item[] = $tmp;
