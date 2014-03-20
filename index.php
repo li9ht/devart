@@ -105,12 +105,21 @@ $app->get('/search/',function () use($app){
 		$tmp = new stdClass(); 
 		$tmp->title = $item->get_title() ;
 		$tmp->link = $item->get_link() ;
+		$tmp->description = $item->get_description();
 
 		if ($enclosure = $item->get_enclosure()){
 
+			//$tmp->date     = $enclosure->get_date();
 			$tmp->media_link 	= $enclosure->get_link();
 			$tmp->media_ratings	   = $enclosure->get_ratings();
 			$tmp->media_thumbnails = $enclosure->get_thumbnails();
+			$tmp->categories	= $enclosure->get_categories();
+			$tmp->category	= $tmp->categories[0]->term;
+			$tmp->credit    = $enclosure->get_credits();
+			$tmp->author_name = $tmp->credit[0]->name;
+			$tmp->author_avatar = $tmp->credit[1]->name;
+			$tmp->copyright	= $enclosure->get_copyright();
+			//s$tmp->credit_img    = $enclosure->get_credit(1);
 		}
 
 		$tmp->thumbnail = $tmp->media_thumbnails[1];
