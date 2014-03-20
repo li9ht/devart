@@ -124,7 +124,11 @@ $app->get('/search/',function () use($app){
 
 		$tmp->thumbnail = $tmp->media_thumbnails[1];
 
-		if(!empty($tmp->thumbnail) && !empty($tmp->media_link)){
+		if(empty($tmp->media_link)){
+			$tmp->media_link = $tmp->media_thumbnails[2];
+		}
+
+		if(!empty($tmp->thumbnail)){
 			$tmp_item[] = $tmp;
 		}
 		
