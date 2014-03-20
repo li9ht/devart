@@ -122,7 +122,7 @@ $app->get('/search/',function () use($app){
 			//s$tmp->credit_img    = $enclosure->get_credit(1);
 		}
 
-		$tmp->thumbnail = $tmp->media_thumbnails[1];
+		$tmp->thumbnail = trim($tmp->media_thumbnails[1]);
 
 		// if(empty($tmp->media_link)){
 		// 	$tmp->media_link = $tmp->media_thumbnails[2];
