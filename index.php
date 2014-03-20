@@ -90,6 +90,7 @@ $app->get('/search/',function () use($app){
 	$art['title']	= $feed->get_title();
 	$art['link']	= $feed->get_link();
 
+
 	if(!empty($art['link_next'])){
 		$url = parse_url($art['link_next'][0]);
 		$query = parse_str($url['query'],$args);
@@ -121,6 +122,7 @@ $app->get('/search/',function () use($app){
 	}
 	if(!empty($tmp_item)){
 		$art['items'] = $tmp_item;
+		$art['error'] = 'no_error';
 	}else{
 		$art['error'] = 'no_data';
 	}
