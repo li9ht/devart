@@ -2,6 +2,8 @@
     "require": {
         "silex/silex": "~1.1",
         "shuber/curl": "dev-master",
-        "simplepie/simplepie": "dev-master"
+        "yangqi/htmldom": "dev-master",
+        "simplepie/simplepie": "dev-master",
+        "desarrolla2/cache":  "dev-master"
     }
 }

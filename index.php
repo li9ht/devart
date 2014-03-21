@@ -2,43 +2,93 @@
 ini_set('xdebug.var_display_max_depth', '10');    
 require_once __DIR__.'/vendor/autoload.php';
 
+use \Yangqi\Htmldom\Htmldom as Htmldom;
+use Desarrolla2\Cache\Cache;
+use Desarrolla2\Cache\Adapter\File;
+
 $app = new Silex\Application();
 $app['debug'] = true;
 
 //libs
 $app->curl = new Curl;
+//cache config
+$cacheDir = 'storage';
+$adapter = new File($cacheDir);
+$app->cache = new Cache($adapter); 
 
 
 $app->get('/',function (){
 	return '';
 });
 
-// $app->get('/popular',function () use ($app){
+function getFromCacheOrHtml($url){
+
+	$cacheDir = 'storage';
+	$adapter = new File($cacheDir);
+	$cache = new Cache($adapter); 
+
+
+	$makeCacheVal = $cache->get(base64_encode($url) );
+	if($makeCacheVal){
+		$htmlStr = $makeCacheVal;
+	}else{
+		
+		$htmlModel = new Htmldom($url);
+		$htmlStr   = $htmlModel;
+		$cache->set(base64_encode($url) , $htmlStr, 9600);
+
+	}
+
+	return $htmlStr;
+}
+
+$app->get('/site',function () use ($app){
 	
-// 	$url  = 'http://backend.deviantart.com/rss.xml?type=deviation&q=boost%3Apopular';
+	$url  = 'http://www.deviantart.com/';
+
+	//$htmlModel = new Htmldom($url);
+	$htmlModel = new Htmldom();
+	$htmlModel->load(getFromCacheOrHtml($url));
 
 
-// 	$response = $app->curl->get($url);
-// 	$xml = simplexml_load_string($response);
-// 	$namespaces = $xml->getNamespaces(true); // get namespaces
+	foreach($htmlModel->find('a.cat-depth-0') as $element){
+		if(!empty($element->href)){
+			$model[] =$element->href;
 
-// 	// iterate items and store in an array of objects
-// 	$items = array();
-// 	foreach ($xml->channel->item as $item) {
+			//$subHtml = new Htmldom($element->href);
+			$subHtml = new Htmldom();
+			$subHtml->load(getFromCacheOrHtml($element->href));
+			foreach ($subHtml->find('a.cat-depth-2') as $subElement) {
+				$mainModel[$element->href][] = $subElement->href;
+			}
 
-// 	  $tmp = new stdClass(); 
-// 	  $tmp->title = trim((string) $item->title);
-// 	  $tmp->link  = trim((string) $item->link);
-// 	  // etc... 
-// 	  // now for the url in media:content
-// 	  //
-// 	  $tmp->rating = trim((string)$item->children($namespaces['media'])->content->attributes()->rating);
+		}					
+	}
 
-// 	  // add parsed data to the array
-// 	  $items[] = $tmp;
-// 	}
-// 	var_dump($items);
-// });
+	//var_dump($mainModel);
+	echo '<string-array name="parent_nav">';
+	foreach ($mainModel as $key => $value) {
+
+		$parentName = str_replace("http://www.deviantart.com/", "", $key);
+		$parentName = str_replace("/", "", $parentName);
+
+		
+		echo '<item>'.$parentName.'</item>';
+
+
+		// echo '<string-array name="'.$parentName.'">';
+		// foreach ($value as $subItem) {
+		// 	$child = str_replace("http://www.deviantart.com/".$parentName, "", $subItem);
+		// 	echo '<item>'.$child.'</item>';
+		// }
+		//echo '</string-array>';
+
+	}
+	echo '</string-array>';
+
+	return '';
+	
+});
 
 
 $app->get('/search/',function () use($app){

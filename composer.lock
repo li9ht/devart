@@ -3,8 +3,60 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "32c3b5207b480110219609768a9d26d3",
+    "hash": "31a9bb10d63b32df1eb3ff738e562102",
     "packages": [
+        {
+            "name": "desarrolla2/cache",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/desarrolla2/Cache.git",
+                "reference": "1f48380045787851c60bc796cd46e358d3ed6821"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/desarrolla2/Cache/zipball/1f48380045787851c60bc796cd46e358d3ed6821",
+                "reference": "1f48380045787851c60bc796cd46e358d3ed6821",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "predis/predis": "*",
+                "raulfraile/ladybug": "v0.7",
+                "symfony/yaml": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Desarrolla2\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel González",
+                    "homepage": "http://desarrolla2.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Provides an cache interface for several adapters (Apc, File, Mongo, Memcached, Mysql, ... )",
+            "homepage": "https://github.com/desarrolla2/Cache/blob/master/README.md",
+            "keywords": [
+                "apc",
+                "cache",
+                "file",
+                "memcached",
+                "mongo",
+                "mysql",
+                "redis"
+            ],
+            "time": "2014-02-24 09:30:14"
+        },
         {
             "name": "pimple/pimple",
             "version": "v1.1.1",
@@ -569,6 +621,46 @@
                 "url"
             ],
             "time": "2014-02-11 13:52:09"
+        },
+        {
+            "name": "yangqi/htmldom",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yangqi/Htmldom.git",
+                "reference": "73f354da5a38ec15f11fbd9dce849a51c55bef0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yangqi/Htmldom/zipball/73f354da5a38ec15f11fbd9dce849a51c55bef0d",
+                "reference": "73f354da5a38ec15f11fbd9dce849a51c55bef0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Yangqi\\Htmldom": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "yangqi",
+                    "email": "i@yangqi.me"
+                }
+            ],
+            "description": "Simple Html Dom Parser for Laravel 4",
+            "keywords": [
+                "HTML Parser",
+                "laravel"
+            ],
+            "time": "2013-10-28 03:02:41"
         }
     ],
     "packages-dev": [
@@ -580,7 +672,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "shuber/curl": 20,
-        "simplepie/simplepie": 20
+        "yangqi/htmldom": 20,
+        "simplepie/simplepie": 20,
+        "desarrolla2/cache": 20
     },
     "platform": [
 
