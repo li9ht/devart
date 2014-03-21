@@ -105,8 +105,7 @@ $app->get('/search/',function () use($app){
 		$tmp = new stdClass(); 
 		$tmp->title = $item->get_title() ;
 		$tmp->link = $item->get_link() ;
-		$tmp->description = $item->get_description();
-
+		
 		if ($enclosure = $item->get_enclosure()){
 
 			//$tmp->date     = $enclosure->get_date();
@@ -119,6 +118,7 @@ $app->get('/search/',function () use($app){
 			$tmp->author_name = $tmp->credit[0]->name;
 			$tmp->author_avatar = $tmp->credit[1]->name;
 			$tmp->copyright	= $enclosure->get_copyright();
+			$tmp->description = $enclosure->get_description();
 			//s$tmp->credit_img    = $enclosure->get_credit(1);
 		}
 
