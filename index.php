@@ -159,10 +159,14 @@ $app->get('/search/',function () use($app){
 		if ($enclosure = $item->get_enclosure()){
 
 			//$tmp->date     = $enclosure->get_date();
-			$tmp->media_link 	= $enclosure->get_link();
+			$media_link = $enclosure->get_link();
+			$real_media_link = str_replace("PRE/", "", $media_link);
+		
+			$tmp->media_link 	= $real_media_link;
 			$tmp->media_height 	= $enclosure->get_height();
 			$tmp->media_width 	= $enclosure->get_width();
 			$tmp->media_ratings	   = $enclosure->get_ratings();
+			$tmp->mature_rating = $tmp->media_ratings[0]->value;
 			$tmp->media_thumbnails = $enclosure->get_thumbnails();
 			$tmp->categories	= $enclosure->get_categories();
 			$tmp->category	= $tmp->categories[0]->term;
