@@ -160,6 +160,8 @@ $app->get('/search/',function () use($app){
 
 			//$tmp->date     = $enclosure->get_date();
 			$tmp->media_link 	= $enclosure->get_link();
+			$tmp->media_height 	= $enclosure->get_height();
+			$tmp->media_width 	= $enclosure->get_width();
 			$tmp->media_ratings	   = $enclosure->get_ratings();
 			$tmp->media_thumbnails = $enclosure->get_thumbnails();
 			$tmp->categories	= $enclosure->get_categories();
